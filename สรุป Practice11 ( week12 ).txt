@@ -1,0 +1,117 @@
+สรุป Practice11 ( week12 ) ได้เรียนรู้อะไรไปบ้าง
+//6.10.2025
+//prompt 1 : Synchronous & Asynchronous
+ได้เรียนรู้เรื่อง Synchronous & Asynchronous เรื่องนี้เคยเรียนผ่านวิชา Backend มาแล้วและได้มาลองเขียนใน Frontend ว่ามันเขียนยังไงและมีอะไรบ้าง
+จากโค้ดที่ลองยกตัวอย่างเรื่อง Synchronous & Asynchronous 
+Synchronous : คือการทำงานที่โค้ดจะถูกประมวลผล ทีละบรรทัดตามลำดับและคำสั่งถัดไปจะ ต้องรอ ให้คำสั่งก่อนหน้าทำงานเสร็จก่อนเสมอ เหมือน 
+console.log('Hello') 
+console.log('Aticha')
+ผลลัพธ์ที่จะได้ก็ต้อง Hello ก่อนแล้วค่อย Aticha คือรอ Hello ทำงานเสร็จก่อนถึงจะไปทำตัวต่อไป
+Asynchronous : คือ การทำงานที่คำสั่งที่ต้องใช้เวลา (เช่น การเรียก API, การอ่านไฟล์, setTimeout) จะถูกส่งไปให้ ทำงานเบื้องหลัง โดย ไม่บล็อก การทำงานของโค้ดที่เหลือ คือถ้าตัวไหนที่ไม่ได้ถูกเซ็ตให้รอก็สามารถทำงานต่อได้เลย เช่น
+console.log('Hello') ทำงานเลย
+setTimeout(() => console.log('Aticha..., '), 5000) รอก่อน 5 วินาที
+console.log('Bye Bye') ทำงานเลย
+ผลลัพธ์ที่จะได้ก็คือ Hello, Bye Bye, Aticha
+ข้อนี้ได้ความรู้เกี่ยวกับ Synchronous & Asynchronous เยอะมากและได้ทวนว่าตัวไหนคืออะไรได้ลองเขียน js เองว่า Synchronous & Asynchronous มันเขียนแบบนี้ 
+
+
+//prompt 2 : async & await
+ต่อมาเป็นการใช้ await กับ function async และการ return Promise 
+await คือ ตัวที่เหมือนให้หยุดรอก่อนแล้วค่อยทำงานต่อไปเป็นตัวที่ช่วย  function asynchronous ให้ทำงานเหมือน synchronous เมื่อโค้ดเจอ await ที่อยู่หน้า Promise (Promise คือคำสั่งที่ต้องใช้เวลาในการทำงาน เช่น การเรียก API, setTimeout) การทำงานของฟังก์ชัน async จะหยุดชั่วคราว (Pause) และ โค้ดจะหยุดรอจนกว่า Promise นั้นจะ สำเร็จ (resolve) หรือ ล้มเหลว (reject) 
+ถ้า Promise สำเร็จ (resolve) await จะส่งค่าผลลัพธ์ออกมา และโค้ดจะทำงานต่อจากบรรทัดนั้น
+ถ้า Promise ล้มเหลว (reject) await จะโยน Error ออกมา  ตัวอย่าง :
+function waitOneSecond() {
+  return new Promise(resolve => {
+    setTimeout(() => {   
+      resolve(); 
+    }, 1000); 
+  });
+}
+async function showSteps() {
+  console.log("Step 1: Start.");
+  console.log("...Waiting 1 second...");
+  await waitOneSecond(); 
+  console.log("Step 2: After waiting 1 second.");
+  console.log("Step 3: Finish.");
+}
+ใช้ Promise setTimeout ว่าต้องรอ 1 วินาที แล้วต่อมา async function ก็จะทำงาน แล้วพอเจอ await waitOneSecond(); ไปเรียก function waitOneSecond ฟังก์ชั่นนี้คือตัวที่บอกว่า  setTimeout ว่าต้องรอ 1 วินาที ก็จะรอ 1 วินาทีแล้วค่อยทำงานต่อไป
+ข้อนี้ได้ความรู้เกี่ยวกับ Asynchronous ว่ามีส่วนประกอบอะไรบ้าง เช่นก็จะมีตัว await ที่ใช้ร่วมกับ  Asynchronous ตลอดและอยู่ใน function Asynchronous เท่านั้นและก็จะรู้จักตัว Promise ว่ามันคืออะไร
+
+
+
+
+/8.10.2025
+//prompt 1 : เขียนโค้ด 2 ฟังก์ชัน ที่ทำงานร่วมกันเพื่อจำลองการนับเวลาแบบมีลำดับขั้นตอน: 
+//ฟังก์ชัน delay(ms) (สร้าง Promise): สร้าง Promise ขึ้นมา ใช้ setTimeout เพื่อหน่วงเวลาตามที่กำหนด (ms) เมื่อถึงเวลาแล้ว ให้เรียก resolve() เพื่อบอกว่าการหน่วงเวลาเสร็จสิ้น
+//ฟังก์ชัน runSequence() (ใช้ async/await): ประกาศเป็นฟังก์ชัน async ใช้คีย์เวิร์ด await เพื่อเรียกใช้ delay() สองครั้งติดกัน: รอ 1000 มิลลิวินาที (1 วินาที) และ รอ 500 มิลลิวินาที (0.5 วินาที)
+//ใช้ console.log() เพื่อแสดงผลว่าโค้ดกำลังหยุดรอ และเมื่อโค้ดทำงานต่อแล้ว เพื่อพิสูจน์ว่าลำดับการทำงานเป็นไปตามที่เขียนไว้
+ขอนี้ก็จะเป็นตัวที่มีตัวแปรเพิ่มขึ้นมาเพื่อเอาไว้กำหนดเวลาการรอเองได้
+function delay(ms) {
+  return new Promise(resolve => {
+    setTimeout(() => {
+      resolve(); 
+    }, ms);
+  });
+}
+async function runSequence() {
+  console.log("Start Sequence.");
+  console.log("Step 1: Waiting for 1000ms...");
+  await delay(1000); 
+  console.log("Step 1: Done.");
+  console.log("Step 2: Waiting for 500ms...");
+  await delay(500); 
+  console.log("Step 2: Done.");
+  console.log("End Sequence.");
+}
+ เราก้จะใช้ ms ที่เป็น parameter ของ function delay มาเป็นตัวกำหนดเวลาได้ เราจะเปลี่ยนจากปกติตรง  setTimeout(() => {
+      resolve(); 
+    }, ms); ตรงนี้จะเป็นเวลา 1000,2000... เราจะใช้ ms เป็นตัวแปรเพื่อกำหนดเวลาเองได้เราก็จะมากำหนดตรง  async function runSequence await delay(500); ก็จะบอกให้รอ 0.5 วินาทีแล้วค่อยทำงานต่อไป
+  });
+}
+ข้อนี้ก็ได้ลองเปลี่ยนจากการที่ใส่เลขเวลารอไปเลยเปลี่นเป็นใส่ตัวแปรและกำหนดเลขเอง ก็จะใช้งานง่ายขึ้นเพราะเราสามารถกำหนดเวลาการรอได้เองเลย
+
+
+//prompt 2 เขียน async/await และ Promise ใน JavaScript เพื่อจำลองสถานการณ์การตรวจสอบสินค้าคงคลัง (Inventory) ของร้านค้าออนไลน์ เป็นการลองใช้ try & catch
+ข้อนี้เป็นการลองใช้ try & catch คือเป็นตัวเหมือนดักจับ error 
+try คือ โค้ดจะหยุดรอที่ await จนกว่า Promise จะสำเร็จหรือล้มเหลว ถ้าสำเร็จจะแสดง Status
+catch คือ ถ้า Promise ล้มเหลว (Reject) จะกระโดดมาที่นี่เพื่อแสดง Error found
+แสดงผล "Finished." เสมอ เมื่อกระบวนการเสร็จสิ้น ตัวอย่างข้อนี้
+
+function checkInventory(productName) (Promise Creator)
+มีหน้าที่: เป็นผู้สร้าง Promise ที่ใช้เวลาในการทำงาน (Asynchronous) และ ส่งคืน new Promise((resolve, reject) => { ... })
+ใช้ setTimeout(..., 500) เพื่อหน่วงรอเวลา 0.5 วินาที
+กรณีสำเร็จ: ถ้า productName คือ "Laptop" จะเรียก resolve() เพื่อส่งข้อความว่าสินค้า "IN STOCK"
+กรณีล้มเหลว: ถ้าเป็นสินค้าอื่น จะเรียก reject() เพื่อส่งข้อความ Error ว่า "OUT OF STOCK"
+
+และ function ที่ 2: orderProduct(productName) (Async/Await Consumer)
+มีหน้าที่: จัดการและรอผลลัพธ์จาก checkInventory โดยใช้ async/await ประกาศเป็น async function และ ใช้ try...catch เพื่อจัดการผลลัพธ์
+ข้อนีได้ความรู้เรื่อง การจัดการข้อผิดพลาด (Error Handling) ของ Promise ด้วย try...catch เข้าใจโครงสร้างของ Promise ที่ต้องมี resolve และ reject เข้าใจการใช้ await ภายใน async เพื่อทำให้โค้ดที่ต้องรอเวลาทำงานตามลำดับ (Synchronous-like)
+
+
+
+
+//10.10.2025
+//prompt 1 (โจทย์ในห้อง)
+ข้อนี้ลองทำโจทย์ในห้องเป็นการโหลดข้อมูลแล้วนำมาแสดงผลบนหน้าเว็บ
+จะใช้ document.addEventListener('DOMContentLoaded', ...): โค้ดจะทำงานหลังจากที่โครงสร้าง HTML โหลดเสร็จแล้ว
+quote.loadQuotes(): สมมติว่าเป็นฟังก์ชัน Asynchronous ที่ส่งคืน Promise ในการเรียกข้อมูล Quote จาก API
+ใช้ .then(quotes => { ... }): ถ้าการเรียก API สำเร็จ (Promise resolve) จะเข้าสู่บล็อก .then
+และโค้ดจะวนลูปข้อมูล quotes ที่ได้มา
+สร้างโค้ด HTML (<div class="quote-card">...</div>) เพื่อแสดงผลแต่ละ Quote แทรก HTML ที่สร้างขึ้นลงใน quoteList บนหน้าเว็บ
+และใช้ .catch(() => { ... }): ถ้าการเรียก API ล้มเหลว (Promise reject) จะเข้าสู่บล็อก .catch เพื่อแสดงข้อความแจ้งเตือน Error บนหน้าเว็บแทน
+ข้อนี้ยากที่ต้องให้มันไปแสดงผลบนหน้าเว็บ ได้ลองใช้  Promise ในสถานการณ์จริงของ Frontend (.then, .catch) เพื่อจัดการกับผลลัพธ์ของ API Call และได้ใช้ความรู้ DOM เพื่อสร้างและแทรกองค์ประกอบ HTML เข้าไปในหน้าเว็บหลังจากโหลดข้อมูล Asynchronous สำเร็จ
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
