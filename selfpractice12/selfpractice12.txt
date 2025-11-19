@@ -1,0 +1,52 @@
+selfpractice12 ได้ทำและเรียนรู้อะไรจาก week นี้บ้าง ?
+//15.11.2025
+จะเป็นการทำ CRUD แบบ RESTAPI 
+รอบนี้จะเป็นการทำงานโจทย์เดียวกับแต่แบ่งว่าแต่ละข้อคือส่วนไหนและทำยังไง
+ในไฟล์ practice12.js
+เริ่มด้วย กำหนด URL ของ API ตัวแปรนี้จะเป็นตัวแปรที่เก็บ URL ของ backend REST API
+const API_URL = "http://localhost:3000/api/fruits";
+Frontend จะเรียก fetch(API_URL) เพื่อดึงข้อมูลหรือส่งข้อมูลไป server
+
+และก็จะเริ่มดึงข้อมูลโดยใช้ element จาก HTML
+const fruitList = document.getElementById("fruitList");
+const fruitNameInput = document.getElementById("fruitName");
+const addBtn = document.getElementById("addBtn"); 
+
+ต่อมาเป็น function load ผลไม้จาก server เป็น async function
+async function loadFruits() {
+  const res = await fetch(API_URL); ตัวนี้ fetch(API_URL) จะส่ง GET request ไป backend เพื่อดึง list ผลไม้
+  const fruits = await res.json(); เป้นตัวแปลงข้อมูลจาก server ที่มันมาเป็น JSON เราก็จะใช้ .json แปลงเป็น  array ของผลไม้
+
+  fruitList.innerHTML = "";
+  fruits.forEach(fruit => {
+    const li = document.createElement("li");
+    li.textContent = fruit.name;
+
+    const delBtn = document.createElement("button");
+    delBtn.textContent = "Delete";
+    delBtn.onclick = async () => {
+      await fetch(`${API_URL}/${fruit.id}`, { method: "DELETE" });
+      loadFruits();
+    };
+
+    li.appendChild(delBtn);
+    fruitList.appendChild(li);
+  });
+}
+
+และต่อมาเป็น function เพิ่มผลไม้ ก็จะใช้ addBtn.addEventListener
+addBtn.addEventListener("click", async () => {
+  const name = fruitNameInput.value.trim(); จะเป็นตัวดึงข้อมูลจาก  output ที่ user กรอกมาแล้วใช้ .trim ตัดช่องว่างระหว่างคำ
+  if (!name) return alert("Enter a fruit name!"); จะใช้ alert บอกว่าถ้ายังไม่กรอกผลไม้ให้กรอกด้วย
+
+  await fetch(API_URL, {    ส่วนนี้จะเป็นตัวส่ง POST request ไป server เพื่อเพิ่มผลไม้ใหม่
+    method: "POST",  
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ name })
+  });
+
+  fruitNameInput.value = ""; ล้างช่อง input หลังเพิ่มผลไม้
+  loadFruits(); และจะใช้ โหลด list ใหม่ (loadFruits()) เพื่อแสดงผลไม้ตัวใหม่
+});
+ความรู้ที่ได้รับจากการเรียนและนำกลับมาฝึกคือได้รู้จัก REST API มากขึ้นและได้ลองเชื่อม Backend REST API ยากตรงที่ต้องกำหนด URL ของ API  http://localhost:3000/api/fruits และมีวิธีการส่งข้อมูลที่หลากหลาย เช่นพวก GET PORT PUT และ DELETE แต่ก็ได้ลองทำอะไรใหม่ๆมากขึ้นและได้ความรู้เกี่ยวกับการส่งข้อมูลต่างๆ
+
