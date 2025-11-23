@@ -1,0 +1,64 @@
+practice13 ได้เรียนรู้อะไรบ้าง ?
+สัปดาห์นี้ได้ลองทำโจทย์ Frontend CRUD เชื่อมต่อ Backend REST API 
+โดยใช้ฟังก์ชันใช้การทำงานแบบ Asynchronous และ Fetch API ที่เรียนมาจากสัปดาห์ก่อน
+เริ่มข้อแรกเป็นระบบจัดการหนังสือ book manager โดนฟังก์ชันของระบบจะมี เพิ่ม, โหลด, และลบหนังสือ โดยเชื่อมต่อ API http://localhost:3000/api/books
+เริ่มด้วยกำหนด  URL ของ API
+const API_URL = "http://localhost:3000/api/books";
+เป็น URL ของ Backend ช้ทุกครั้งที่ต้อง GET, POST, DELETE
+ต่อมาก็จะ ดึง DOM Element จากหน้าเว็บ
+const Readbook = document.getElementById("bookList"); Readbook คือ <ul> ที่แสดงรายการหนังสือ
+const Addbook = document.getElementById("addBtn"); Addbook คือ ปุ่มเพิ่มหนังสือ
+const Bookname = document.getElementById("bookTitle"); Bookname คือ ช่องกรอกชื่อหนังสือ
+ต่อมาก็จะเขียน ฟังก์ชันโหลดหนังสือทั้งหมด 
+async function loadbook() {
+    const result = await fetch(API_URL);
+    const books = await result.json(); await รอผลลัพธ์จาก server และใช้  result.json() เพื่อแปลง JSON เป็น array 
+Readbook.innerHTML = ""; ตัวนี้จะเป็นตัวลบข้อมูลเก่าเพื่อป้องกันข้อมูลซ้ำ
+และก็จะใช้ forEach วนลูปแต่ละ book เพื่อสร้างรายการในหน้าเว็บ
+ต่อมาก็จะสร้างปุ่ม Delete
+const Delete = document.createElement("button");
+Delete.textContent = "Delete";
+และเมื่อกดปุ่ม Delete จะส่งคำสั่ง DELETE ไป Backend 
+Delete.onclick = async () => {
+    await fetch(`${API_URL}/${book.id}`, { method: "DELETE" }); ส่ง HTTP DELETE → /api/books/IDของหนัง และรอจนลบสำเร็จ
+    loadbook(); พอเสร็จก็จะโหลดรายการใหม่
+li.appendChild(Delete);
+Readbook.appendChild(li); ตัว appendChild เป็นตัวที่จะเอาปุ่ม Delete ไปแสดงบนหน้าเว็บ
+ต่อมาจะเป็นฟังก์ชั่น add หนังสือ
+Addbook.addEventListener("click", async () => { เมื่อกดปุ่ม add 
+const name = Bookname.value.trim();
+if (!name) return alert("Enter a book name!"); ถ้าไม่ใส่ชื่อ จะขึ้น alert แจ้งเตือน
+และจะส่ง  POST ไป Backend เพื่อเพิ่มหนังสือใหม่
+await fetch(API_URL, {
+    method: "POST",    // method: "POST" เพิ่มข้อมูลใหม่
+    headers: { "Content-Type": "application/json" }, headers  บอกว่า body เป็น JSON
+        body: JSON.stringify({ title: name })   body ก็จะส่งข้อมูลรูปแบบ JSON เช่น
+{ "title": "New Book" }
+});
+ข้อนี้ได้ความรู้เรื่อง Frontend ติดต่อกับ Backend ยังไงและได้ความรู้เรื่อง หลักการทำงานของ Fetch API ว่า Fetch API ใช้สำหรับให้ Frontend ติดต่อกับ Backend ได้ลองเขียน get,put,post,delete และได้ลองฝึกเขียน async / await มากขึ้น
+
+
+
+ต่อมาข้อ 2 จะเป็นแบบข้อ 1 เลยแต่เป็นเรื่อง การจัดการหนัง movie manager
+ข้อนี้ก็ได้ลองเขียนได้ลองฝึกเขียนมากขึ้นทำให้เขียนได้คล่องมากขึ้น  และได้ลองเขียน async function มากขึ้น
+ได้ฝึกเขียน  Fetch กับ HTTP Method ต่าง ๆ
+ใช้ GET — ดึงข้อมูลหนังทั้งหมด
+const res = await fetch("http://localhost:3000/movies");
+const movies = await res.json();
+ใช้ POST — เพิ่มหนังใหม่
+fetch("http://localhost:3000/movies", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ title: movieTitle })
+});
+ใช้ PUT — อัปเดตชื่อหนัง
+fetch(`http://localhost:3000/movies/${id}`, {
+  method: "PUT",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ title: newName })
+});
+และใช้ DELETE — ลบหนัง
+fetch(`http://localhost:3000/movies/${id}`, {
+  method: "DELETE"
+});
+สรุปความรู้ที่ได้จากข้อนี้ ได้รู้วิธีดึงข้อมูลจาก API  รู้การส่งข้อมูลแบบ JSON และได้ใช้ fetch ครบทุก method (GET/POST/PUT/DELETE) สุดท้ายได้รู้ว่า  frontend คุยกับ backend ยังไง 
