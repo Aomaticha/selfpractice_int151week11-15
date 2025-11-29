@@ -1,0 +1,76 @@
+practice 15 
+week นี้เป็นการนำความรู้ที่เรียนจากวิชา frontend เรื่อง date/time มาเขียนในเว็บของตัวเอง
+
+ฟังก์ชันที่ 1: formatLocalReservationDate() ฟังก์ชันนี้ใช้ใน Reservation Period คือ set Format เวลาแบบไม่มีวินาที (ตามสไลด์)
+code :
+function formatLocalReservationDate(dateString) {
+  if (!dateString) return "";
+  const d = new Date(dateString);
+  const datePart = new Intl.DateTimeFormat("en-GB", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+  }).format(d);
+  const timePart = new Intl.DateTimeFormat("en-GB", {
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+  }).format(d);
+  const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  return `${datePart}, ${timePart} (${timeZone})`;
+}
+เริ่มด้วยประกาศ function formatLocalReservationDate(dateString) {    รับค่าตัวเดียว: dateString
+if (!dateString) return ""             คือถ้าไม่มีข้อมูล  ให้คืนค่าว่าง กันเวลา API ยังไม่มีข้อมูล
+const d = new Date(dateString);     และแปลง string เป็น object วันที่ของ JavaScript
+ต่อมาโค้ดตัวนี้ :
+    onst datePart = new Intl.DateTimeFormat("en-GB", {
+  day: "2-digit",
+  month: "2-digit",
+  year: "numeric",
+}).format(d);
+คือการเลือก format แบบ อังกฤษ (en-GB) = DD/MM/YYYY   เช่น: 10/11/2024
+
+และก็จะเป็น format ของเวลา :
+const timePart = new Intl.DateTimeFormat("en-GB", {
+  hour: "2-digit",
+  minute: "2-digit",
+  hour12: false,
+}).format(d);
+เวลาแบบ HH:MM (24 ชม.)  และ ไม่มีวินาที (เพราะ Reservation Period ไม่ใช้วินาที)
+
+const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+จะเป็นการดึง timezone ของเครื่องผู้ใช้ เช่น: Asia/Bangkok , America/New_York
+
+สุดท้ายรวมกันจะได้แบบนี้ :
+return `${datePart}, ${timePart} (${timeZone})`;
+รวมเป็น String แบบ:  10/11/2024, 13:50 (Asia/Bangkok)
+
+
+ต่อมาเป็น ฟังก์ชันที่ 2: formatLocalDate() ฟังก์ชันนี้จะใช้กับส่วนอื่น ๆ ของระบบ (เช่น timestamp ประกาศแผน) แต่ มีวินาที (ตรงตาม requirement)
+code :
+function formatLocalDate(dateString) {
+  if (!dateString) return "";
+  const d = new Date(dateString);
+  const datePart = new Intl.DateTimeFormat("en-GB", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(d);
+  const timePart = new Intl.DateTimeFormat("en-GB", {
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: false,
+  }).format(d);
+  const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  return `${datePart}, ${timePart} (${timeZone})`;
+}
+ฟังก์ชันนีเจะเหมือนฟังก์ชันข้างบนแต่จะเพิ่ม second: "2-digit" คือตัววินาที
+  second: "2-digit"
+ผลลัพธ์ก็จะได้แบบนี้ : 10/11/2024, 13:50:25 (Asia/Bangkok)
+
+สรุปเรื่อง date/time ได้ความรู้เรื่อง date/time และได้รู้ว่า date time ใน js มัน set ยังไงและได้รู้จัก format ต่างๆ เช่นต้องเริ่มจากสร้าง วันเวลา ก็จะใช้ new Date() เป็นวลาปัจจุบัน และสามารถ set เวลาเองได้คือใช้ new Date("YYYY-MM-DDTHH:MM:SS") 
+และสามารถหำหนดตาม requirement ตามที่อาจาร์ยต้องการได้ด้วย เช่น ใช้ format ให้ผู้ใช้เห็นเป็นเวลาท้องถิ่น (Local time) และสามารถแสดง timezone ของผู้ใช้ได้ 
+
+
+

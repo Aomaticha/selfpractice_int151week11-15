@@ -1,0 +1,67 @@
+selfpractice14 
+weekนี้ จะเป็นการนำงานที่ในวิชา integrated project มาลองฝึกเขียน
+เป็นเรื่องการเขียน dialog เพื่อจัดการกล่องแจ้งเตือน ทั้งหมดของหน้าเว็บ  ทั้งแบบแจ้งข้อความทั่วไป และแบบยืนยันการยกเลิก (Confirm Dialog) แบบการทำ แจ้งผลว่าเราลงทะเบียนสำเร็จแล้ว หรือ
+แจ้ง error แจ้งว่า action ว่าลงทะเบียนไม่ได้ตอน period ปิด และมีพวก event การคลิกปุ่มต่างๆ
+ตัวอย่าง message:
+"Declaration successful."
+"There is a problem. Please try again later."
+"Reservation period is closed."
+เริ่มด้วยประกาศตัวแปร ดึง Element ของ Dialog ทั้งหมดจาก DOM
+ตัวอย่าง document.getElementById("ecors-dialog")  ดึง dialog สำหรับ popup แจ้งเตือนทั่วไป
+dialogMessage                      คือ element สำหรับใส่ข้อความใน popup
+dialogBtn                              คือ ปุ่ม OK ใน popup
+
+ต่อมาจะเป็น ฟังก์ชัน showDialog ฟังก์ชั่นที่ทำหน้าที่ เปิด Dialog แจ้งเตือน และรองรับ สถานะพิเศษสำหรับ error 403 คือระบุว่าเป็น 403 หรือไม่ ถ้าเป็นก็ให้ปุ่ม dialog ตัดสินใจว่าจะ reload หน้าเว็บ
+โค้ดของ function นี้ :
+function showDialog(message, is403 = false) {                  
+  dialogMessage.textContent = message;
+  dialogMessage.dataset.is403 = is403 ? "true" : "false";
+  dialog.showModal();
+}
+เริ่มด้วย สร้างฟังก์ชันชื่อ showDialog รับ parameter สองตัว: 1.message จะแสดงข้อความที่จะโชว์ใน dialog และ 2.is403 คือถ้าเป็นกรณี error 403 ให้ dialog ทำงานพิเศษ (ค่า default = false)
+dialogMessage.textContent = message;                                        คือจะนำข้อความที่ส่งเข้าไป (message) แสดงบน dialog  (เป็นการใส่ข้อความลงในนี้ <p id="ecors-dialog-message">...</p>)
+dialogMessage.dataset.is403 = is403 ? "true" : "false";  คือถ้า is403 = true เก็บค่า "true"  ถ้าไม่ใช่  "false" ใ ช้เพื่อให้ handler ของปุ่ม dialog รู้ว่า  "dialog นี้เป็น error 403 ไหม?"
+dialog.showModal();                                                                             คือการเปิด dialog แบบ modal ทำให้ dialog แสดงขึ้นมาบนจอ และบังคับให้ผู้ใช้ต้องตอบ (กดปุ่ม) ก่อนถึงจะปิดได้
+
+ต่อมาจะเป็นการกดปุ่ม ok
+dialogBtn.addEventListener("click", () => {
+  if (dialogMessage.dataset.is403 === "true") {
+    window.location.reload();
+  } else {
+    dialog.close();
+  }
+});
+addEventListener("click", ...) เมื่อกดปุ่ม OK
+if (dialogMessage.dataset.is403 === "true")  จะเช็คว่า dialog ที่เปิดอยู่เป็น error 403 หรือไม่  
+window.location.reload();    ถ้าเป็น 403                   จะ reload หน้าใหม่
+dialog.close();    ถ้าไม่ใช่ 403                                     จะปิด popup เฉย ๆ
+
+ต่อมาจะเป็นการคลิกนอก dialog หรือกด ESC 
+dialog.addEventListener("cancel", () => { 
+  if (dialogMessage.dataset.is403 === "true") {
+    window.location.reload();
+  } else {
+    dialog.close();
+  }
+});
+dialog.addEventListener("cancel", () => {           "cancel" คือ event เวลา dialog ถูกปิดต่างจากปุ่ม OK
+if (dialogMessage.dataset.is403 === "true")       ถ้าเป็น 403 ต้องให้ reload เสมอ
+
+ฟังก์ชันปิด Confirm Dialog
+const closeConfirmDialog = () => {
+  confirmDialog.close();
+  confirmMessage.textContent = "";
+};
+
+confirmDialog.close()                        จะปิดหน้าต่าง confirm ถ้าเรา confirm แล้ว
+confirmMessage.textContent = "";  และจะลบข้อความเก่าเพื่อกัน error
+
+ต่อมาจะเป็นการจัดการปุ่ม Keep ใน confirm dialog
+confirmKeepBtn.addEventListener("click", closeConfirmDialog);
+เวลา ที่ user กด "Keep" จะไม่ยกเลิก แค่ปิด dialog เฉย ๆ และจะไม่เรียก API DELETE เพราะไม่ใช่การลบแต่เป็นการเก็บข้อมูลเก่าไว้
+
+สุดท้ายจะเป็นการกด ESC ใน confirm dialog
+confirmDialog.addEventListener("cancel", closeConfirmDialog);
+ถ้า user กด ESC หรือปิด dialog แบบอื่น ก็ให้ปิด confirm dialog และล้างข้อความเหมือนกัน
+
+ความรู้และประสบการณ์ที่ได้ : ได้นำความรู้ที่เรียนทั้งหมดมาทำ project และได้ลองเขียนโค้ดตามที่อาจาร์ยเคยสอน ทำให้เข้าใจในการเขียนโค้ดและเนื้อหาที่เรียนมากขึ้นเพราะได้ลองทำจริงๆได้เจอปัญหาและลองแก้ปัญหาจริงๆ และยังเขียนโค้ดได้คล่องมากขึ้นเพราะได้ฝึกเขียนจาก practice ที่ผ่านมา 
