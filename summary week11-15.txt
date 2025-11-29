@@ -1,0 +1,34 @@
+สรุป week11-15 ได้เรียนรู้อะไรบ้าง ?
+ได้ความรู้เรื่อง Synchronous & Asynchronous, Promise, async/await ได้รู้ว่าแต่ละอันคืออะไรและมีหน้าที่อะไร เช่น Synchronous คือการทำงาน แบบโค้ดทำงานทีละบรรทัด และ บรรทัดถัดไปต้องรอให้บรรทัดก่อนหน้าทำงานเสร็จ (Blocking)
+ส่วน Asynchronous คือ โค้ดที่ใช้เวลานาน (API, setTimeout) จะทำงานเบื้องหลัง และ ไม่บล็อกคำสั่งอื่น (Non-Blocking) จะมี await ที่ทำงานร่วมกับ Async async ทำให้ฟังก์ชันคืนค่าเป็น Promise และ await จะหยุดรอ Promise จนเสร็จ (ทำงานเหมือน synchronous) ใช้ร่วมกับ try...catch เพื่อจัดการ error จาก Promise 
+สิ่งที่ได้เรียนรู้จากเรื่องนี้ก็คือ  :
+ทำให้เข้าใจความต่างระหว่าง synchronous และ asynchronous
+เข้าใจการใช้ async/await กับ Promise
+และรู้วิธีจัดการ error ของ Promise ด้วย try...catch
+และมีเรื่อง การประยุกต์ใช้ Delay & Error Handling
+ฟังก์ชัน delay(ms) คือ ฟังก์ชันที่ใช้กำหนดเวลารอแบบยืดหยุ่นด้วยพารามิเตอร์ ms ตัวอย่าง: await delay(1000); คือให้หยุดรอ 1 วินาที
+และ เรื่อง Error Handling ด้วย try/catch จะเอาไว้ใช้ดักจับข้อผิดพลาดจาก Promise 
+เรื่องนี้ก็ได้ความรู้เรื่อง จัดการเวลารอแบบยืดหยุ่น  และก้ได้รู้ว่าถ้ามี error จะใช้ try/catch จัดการข้อผิดพลาดของ Promise
+เรื่อง  CRUD + REST API  คือ เชื่อมต่อ Backend REST API ผ่าน URL
+จะมีฟังก์ชัน load, add, delete ข้อมูล
+await fetch(API_URL, { method: "POST", headers: {...}, body: JSON.stringify({ name }) });
+await fetch(`${API_URL}/${id}`, { method: "DELETE" });
+เรืองนี้ได้ลองเชื่อม backend REST API และได้รู้วิธีการส่งข้อมูลดารลบข้อมูลต่างๆ
+เข้าใจ REST API (GET, POST, DELETE)  เข้าใจว่า การส่ง/รับข้อมูล JSON ระหว่าง Frontend และ Backend ทำยังไง
+และสุดท้ายได้เรียนรู้เรื่อง date time ใน js ว่ามัน set ยังไง js จะใช้ Date ในการจัดการวันเวลา, Intl.DateTimeFormat สำหรับฟอร์แมต และสามารถแสดงเวลาแบบ local และ timezone ได้ตามต้องการที่เรา set
+การใช้งานหลักๆหรือเริ่มเขียนก็จะ เริ่มสร้างวันที่ปัจจุบันหรือกำหนดเอง
+แปลง string  Date ด้วย new Date("YYYY-MM-DDTHH:MM:SS")
+ดึงค่า day, month, year, hour, minute, second :
+const d = new Date();
+d.getFullYear();   
+d.getMonth();      
+d.getDate();       
+d.getHours();     
+d.getMinutes();    
+d.getSeconds();    
+และมีฟอร์แมตวันที่-เวลาให้เหมาะกับผู้ใช้ (local time + timezone)
+const d = new Date();
+const dateStr = new Intl.DateTimeFormat("en-GB").format(d); // DD/MM/YYYY
+const timeStr = new Intl.DateTimeFormat("en-GB", { hour: '2-digit', minute: '2-digit', hour12: false }).format(d); // HH:MM
+สรุปสุดท้าย 5 week ที่ผ่านมาได้เรียนรู้หลายเรื่องและแต่จะเรื่องสามารถนำไปใช้ในวิชา integrated project ได้ ในวิชา integrated project จะเป็นการได้ลองทำงานจริงๆเราก็เอาความรู้และการฝึกขียนโปรแกรม js จากที่เรียนจากวิชา frontend ไปช่วยได้เยอะมากเพราะเราได้ฝึกเขียนมาก่อนแล้วและพอเจอปัญหาก็สามารถแก้ได้ และคิดว่าความรู้ที่ได้เรียนมันใกล้ตัวเราและสามารถนำไปใช้งานได้ง่ายขึ้น
+
